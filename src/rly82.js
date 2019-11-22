@@ -34,6 +34,8 @@ const RESET_RELAY_1 = 0x6F;
 // Turn relay 2 off
 const RESET_RELAY_2 = 0x70;
 
+// for more commands see: https://www.robot-electronics.co.uk/files/usb-rly82.pdf
+
 //
 // RLY handler
 //
@@ -43,47 +45,70 @@ class RLY82 extends EventEmitter {
     this.portName = portName;
   }
 
+  /**
+   * Open connection
+   */
   connect() {
-    this.port = new SerialPort(this.portName, { baudRate: 9600})
-    this.port.on('open', () => console.log('RLY82 connected'))
-    this.port.on('error', error => {
-      console.error('Failed to open serial port', error)
-      process.exit(1)
+    return new Promise((resolve, reject) => {
+      // open serial (USB) port
+      this.port = new SerialPort(this.portName, { baudRate: 9600})
+      this.port.on('error', error => {
+        reject(new Error('Failed to open serial port'))
+      })
+
+      // handle serial data input
+      this.latestInputs = 0;
+      this.port.on('data', buffer => {
+        /* received data, emit inputs byte */
+        const value = buffer[0]
+        if (value !== this.latestInputs) {
+          this.emit('inputs', value)
+          this.latestInputs = value;
+        }
+      })
+
+      // initially put all relays off
+      this.port.write(Buffer.from([SET_RELAY_STATES, 0]));
+      resolve()
     })
-    this.latestInputs = 0;
-    this.port.on('data', buffer => {
-      /* get byte from the serial port */
-      const value = buffer[0]
-      if (value !== this.latestInputs) {
-        this.emit('inputs', value)
-        this.latestInputs = value;
-      }
-    })
-    // put all relays off
-    this.port.write(Buffer.from([SET_RELAY_STATES, 0]));
   }
 
+  /**
+   * Disconnect and stop polling (if any)
+   */
   disconnect() {
+    stopPolling();
     if (this.port.isOpen) {
-      console.log('Close port')
       this.port.close();
     }
   }
 
+  /**
+   * Start polling for input changes
+   */
   startPolling(timeout) {
     this.timer = setInterval(() => {
       this.port.write(Buffer.from([GET_DIGITAL_INPUTS]));
     }, timeout || 500)
   }
 
+  /**
+   * Stop polling for input changes
+   */
   stopPolling() {
     clearInterval(this.timer)
   }
 
+  /**
+   * Turn relay x on
+   */
   turnRelayOn(relay) {
     this.port.write(Buffer.from([relay === 0 ? SET_RELAY_1: SET_RELAY_2]));
   }
 
+  /**
+   * Turn relay x off
+   */
   turnRelayOff(relay) {
     this.port.write(Buffer.from([relay === 0 ? RESET_RELAY_1: RESET_RELAY_2]));
   }
