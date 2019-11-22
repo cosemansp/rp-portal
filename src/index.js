@@ -23,7 +23,7 @@ const { playSound, wait, isInputHigh } = require('./utils');
     rly82.startPolling(100);
     rly82.on('inputs', async (data) => {
       console.log('>> inputs: ', data.toString(2));
-      if (isInputHigh(data, 1)) {
+      if (isInput(data, 1)) {
         await runCatOnToilet(rly82);
       }
     });
@@ -52,7 +52,7 @@ const { playSound, wait, isInputHigh } = require('./utils');
     });
   }
   catch(err) {
-    console.log('Error: ', error);
+    console.log('Error: ', err.message);
     process.exit(1)
   }
 })()

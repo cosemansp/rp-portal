@@ -53,23 +53,25 @@ class RLY82 extends EventEmitter {
       // open serial (USB) port
       this.port = new SerialPort(this.portName, { baudRate: 9600})
       this.port.on('error', error => {
-        reject(new Error('Failed to open serial port'))
+        reject(new Error('Failed to open serial port: ' + this.portName))
       })
 
-      // handle serial data input
-      this.latestInputs = 0;
-      this.port.on('data', buffer => {
-        /* received data, emit inputs byte */
-        const value = buffer[0]
-        if (value !== this.latestInputs) {
-          this.emit('inputs', value)
-          this.latestInputs = value;
-        }
+      this.port.on('open', () => {
+        // handle serial data input
+        this.latestInputs = 0;
+        this.port.on('data', buffer => {
+          /* received data, emit inputs byte */
+          const value = buffer[0]
+          if (value !== this.latestInputs) {
+            this.emit('inputs', value)
+            this.latestInputs = value;
+          }
+        })
+  
+        // initially put all relays off
+        this.port.write(Buffer.from([SET_RELAY_STATES, 0]));
+        resolve()
       })
-
-      // initially put all relays off
-      this.port.write(Buffer.from([SET_RELAY_STATES, 0]));
-      resolve()
     })
   }
 
@@ -77,7 +79,7 @@ class RLY82 extends EventEmitter {
    * Disconnect and stop polling (if any)
    */
   disconnect() {
-    stopPolling();
+    this.stopPolling();
     if (this.port.isOpen) {
       this.port.close();
     }

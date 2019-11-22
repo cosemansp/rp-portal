@@ -14,7 +14,4 @@ How to find serial port on MacOS
 # list all serial ports 
 $ ls /dev/tty.*
 /dev/tty.Bluetooth-Incoming-Port /dev/tty.usbmodem10009051
-
-# read from serial port 
-screen /dev/tty.usbmodem10009051 9600
 ```
