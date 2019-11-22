@@ -1,6 +1,6 @@
 const readline = require('readline');
 const RLY82 = require('./rly82');
-const { playSound, wait, isInputHigh } = require('./utils');
+const { playSound, wait, isInput } = require('./utils');
 
 (async function run() {
   //
