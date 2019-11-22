@@ -1,6 +1,5 @@
 const { EventEmitter } = require('events');
 const SerialPort = require('serialport');
-const player = require('play-sound')(opts = {})
 
 //
 // Commands
@@ -102,7 +101,7 @@ class RLY82 extends EventEmitter {
   }
 
   /**
-   * Turn relay x on
+   * Turn relay x on  
    */
   turnRelayOn(relay) {
     this.port.write(Buffer.from([relay === 0 ? SET_RELAY_1: SET_RELAY_2]));

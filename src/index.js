@@ -1,6 +1,23 @@
-const readline = require('readline');
 const RLY82 = require('./rly82');
-const { playSound, wait, isInput } = require('./utils');
+const { wait, isInput } = require('./utils');
+const SoundPlayer = require('./player');
+const Dispatcher = require('./dispatcher');
+const player = new SoundPlayer();
+
+// Door sequence
+/* 
+  >> deur bel (input 1), when door is closed
+    - start timer 10 sec (see later)
+    - relay 1 - open door (voor 2 sec)
+    - audio 1 ('hello, goededag, kom binnen, ...')
+  >> 10sec timer
+    - audio 2 (boos: 'he laat jij de deur ook open staan ...')
+  >> deur sluit (input 2)
+    - stop audio 1, audio 2 
+    - timer stop
+    - audio ('merci')
+    - re-enable doorbel
+*/
 
 (async function run() {
   //
@@ -18,66 +35,59 @@ const { playSound, wait, isInput } = require('./utils');
     await rly82.connect();
 
     //
-    // Start polling
-    //
-    rly82.startPolling(100);
-    rly82.on('inputs', async (data) => {
-      console.log('>> inputs: ', data.toString(2));
-      if (isInput(data, 1)) {
-        await runCatOnToilet(rly82);
-      }
+    // Process events
+    // 
+    const dispatcher = new Dispatcher(rly82, player);
+    let toggle = 0;
+    let doorOpen = false;
+    dispatcher.on('bell', async (data) => {
+      console.log('doorBell');   
+      doorOpen = true;
+      dispatcher.openDoor();   
+      await dispatcher.player.playOnce('./sounds/welcome.mp3') 
+      dispatcher.setTimer(2000, 'tooLongOpen');
     });
 
-    //
-    // Handle keyboard input
-    //
-    console.log('Press 1, 2 or ctrl-c')
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.on('keypress', (str, key) => {
-      console.log('>> key pressed: ', key.name);
-      if (key.ctrl && key.name === 'c') {
-        console.log('CTRL-C, quitting...')
-        rly82.disconnect();
-        process.exit(); 
-      } 
-      if (key.name === '1') {
-        console.log('  Set relay 1 on')
-        rly82.turnRelayOn(1)
-      }
-      if (key.name === '2') {
-        console.log('  Set relay 1 off')
-        rly82.turnRelayOff(1)
-      }
+    dispatcher.on('door', async (data) => {
+      console.log('doorClosed');
+      if (!doorOpen) return;
+      doorOpen = false;
+      dispatcher.stopTimer();
+      dispatcher.player.stopRepeat();
+      dispatcher.player.playOnce('./sounds/thankyou.mp3')      
     });
+
+    dispatcher.on('timer', async (key) => {
+      console.log('timer', key);  
+      if (key === 'tooLongOpen') {
+        dispatcher.player.playRepeat('./sounds/angry.mp3', 3)
+      }
+    })
+
+    dispatcher.on('quit', async (key) => {
+      console.log('CTRL-C, quitting...')
+      dispatcher.dispose();
+      process.exit(); 
+    });
+
+    // dispatcher.on('keypress', async (key) => {
+    //   console.log('toggle relay 1: ', toggle)
+    //   if (!toggle) {
+    //     toggle = 1;
+    //     dispatcher.rly82.turnRelayOn(1)
+    //   }
+    //   else {
+    //     toggle = 0;
+    //     dispatcher.rly82.turnRelayOff(1)
+    //   } 
+    // })
+
   }
   catch(err) {
     console.log('Error: ', err.message);
     process.exit(1)
   }
 })()
-
-// Cat sequence
-async function runCatOnToilet(rly82) {
-  console.log('runCatOnToilet');
-  try {
-    console.log('  play cat...');
-    await playSound('./sounds/cat.mp3')
-
-    rly82.turnRelayOn(1)
-    console.log('  wait 0.5 sec...');
-    await wait(500);
-
-    console.log('  play toilet...');
-    await playSound('./sounds/toilet.mp3')
-
-    rly82.turnRelayOff(1)
-    console.log('  done');
-  }
-  catch(err) {
-    console.log('Failed:', err)
-  }
-}
 
 
 

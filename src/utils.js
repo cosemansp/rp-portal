@@ -1,20 +1,3 @@
-// http://soundbible.com/tags-mp3.html
-const player = require('play-sound')(opts = { })
-
-/**
- * Plays a sound
- */
-module.exports.playSound = (file) => {
-  return new Promise((resolve, reject) => {
-    const audio = player.play(file, {}, (err) => {
-      if (err) {
-        return reject('Failed to play: ' + file);
-      }
-      resolve();
-    })  
-  })
-}
-
 /**
  * Wait for a number of ms
  */
