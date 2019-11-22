@@ -56,7 +56,7 @@ const player = new SoundPlayer();
     });
 
     dispatcher.on('door', async (data) => {
-      console.log('doorClosed');
+      console.log('doorClosed', doorOpen);
       if (!doorOpen) return;
       try {
         dispatcher.stopTimer();

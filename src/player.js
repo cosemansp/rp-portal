@@ -22,6 +22,7 @@ class SoundPlayer extends EventEmitter {
   }
 
   stop() {
+    console.log('stop playback')
     if (!this.audio) {
       return Promise.resolve();
     }
@@ -55,6 +56,7 @@ class SoundPlayer extends EventEmitter {
           return;
         }
         resolve(this.audio);
+        this.audio = null;
       })  
     })
   }
