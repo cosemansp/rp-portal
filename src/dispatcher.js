@@ -67,7 +67,7 @@ class Dispatcher extends EventEmitter {
 
   dispose() {
     this.stopTimer();
-    this.player.stopRepeat();
+    this.player.stop();
     this.rly82.disconnect();
   }
 }

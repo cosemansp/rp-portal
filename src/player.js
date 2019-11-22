@@ -1,49 +1,58 @@
 // http://soundbible.com/tags-mp3.html
 const rawPlayer = require('play-sound')(opts = { })
+const { EventEmitter } = require('events');
 
-
-class SoundPlayer {
+class SoundPlayer extends EventEmitter {
   constructor() {
+    super();
     this.audio = null;
     this.stopped = false;
   }
 
   async playOnce(file) {
-    this.stop();
-    this.stopped = false;
     await this._play(file);
   }
 
   playRepeat(file, times) {
-    this.stoppedRepeat = false;
     let promise = Promise.resolve();
-    while (times-- > 0 && !this.stoppedRepeat) promise = promise.then(function () {
-      if (!this.stoppedRepeat) {
-        return this._play(file);
-      }
+    while (times-- > 0) promise = promise.then(function () {
+      return this._play(file);
     }.bind(this));
     return promise;
   }
 
-  stopRepeat() {
-    this.stop();
-    this.stoppedRepeat = true;
-  }
-
   stop() {
-    if (this.audio) {
+    if (!this.audio) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      this.stopped = true;
+      
+      // stop playback
       this.audio.kill();
       this.audio = null;
-    }
-    this.stopped = true;
+
+      // wait until  playback is finished
+      this.on('playBackEnd', () => {
+        this.stopped = false;
+        resolve()
+      })
+    })
   }
 
   _play(file) {
     return new Promise((resolve, reject) => {
+      console.log('start playback: ', file)
       this.audio = rawPlayer.play(file, {}, (err) => {
+        console.log('stop playback', err, this.stopped)
         if (err) {
-          console.log('error playback', err);
           return reject('Failed to play: ' + file);
+        }
+        if (this.stopped) {
+          this.emit('playBackEnd');
+          reject('playback aborted')
+          return;
         }
         resolve(this.audio);
       })  
