@@ -12,7 +12,7 @@ const { playSound, wait, isInput } = require('./utils');
     //
     // Connect RLY82
     //
-    const portName = process.env.PORT_NAME || '/dev/tty.usbmodem10009051'
+    const portName = process.env.PORT_NAME || '/dev/ttyACM0' /* raspberry-pi device name */
     const rly82 = new RLY82(portName);
     console.log('Connect RLY82')
     await rly82.connect();
