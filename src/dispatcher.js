@@ -12,7 +12,7 @@ const INPUT_DOOR_CLOSED = 2;
 class Dispatcher extends EventEmitter {
   constructor(rly82, player) {
     super();
-
+    this.timers = {};
     this.rly82 = rly82;
     this.player = player;
     rly82.startPolling(100);
@@ -54,19 +54,27 @@ class Dispatcher extends EventEmitter {
   }
 
   setTimer(ms, key) {
-    this.timerId = setTimeout(() => {
+    this.timers[key] = setTimeout(() => {
       this.emit('timer', key);
     }, ms)
   }
 
-  stopTimer() {
-    if (this.timerId) {
-      clearTimeout(this.timerId)
+  stopTimer(key) {
+    if (this.timers[key]) {
+      clearTimeout(this.timers[key])
     }
   }
 
+  stopAllTimers() {
+    const keys = Object.keys(this.timers);
+    keys.forEach(key => {
+      clearTimeout(this.timers[key])
+    })
+    this.timers = {};
+  }
+
   dispose() {
-    this.stopTimer();
+    this.stopAllTimers();
     this.player.stop();
     this.rly82.disconnect();
   }
