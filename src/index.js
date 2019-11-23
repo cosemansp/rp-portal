@@ -44,13 +44,13 @@ const player = new SoundPlayer();
       console.log('doorBell');   
       if (doorOpen) return;
       try {
+        await dispatcher.openDoor();   
         doorOpen = true;
-        dispatcher.openDoor();   
         await dispatcher.player.playOnce('./sounds/welcome.mp3') 
         dispatcher.setTimer(2000, 'tooLongOpen');
       }
       catch(err) {
-        // playback aborted
+        // aborted
         console.log(err);
       }
     });
@@ -65,7 +65,7 @@ const player = new SoundPlayer();
         doorOpen = false;
       } 
       catch(err) {
-        // playback aborted
+        // aborted
         console.log(err);
       }
     });
@@ -77,7 +77,7 @@ const player = new SoundPlayer();
         }
       }
       catch(err) {
-        // playback aborted
+        // aborted
         console.log(err);
       }
     })
