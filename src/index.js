@@ -93,17 +93,17 @@ const player = new SoundPlayer();
       process.exit(); 
     });
 
-    // dispatcher.on('keypress', async (key) => {
-    //   console.log('toggle relay 1: ', toggle)
-    //   if (!toggle) {
-    //     toggle = 1;
-    //     dispatcher.rly82.turnRelayOn(1)
-    //   }
-    //   else {
-    //     toggle = 0;
-    //     dispatcher.rly82.turnRelayOff(1)
-    //   } 
-    // })
+    dispatcher.on('keypress', async (key) => {
+      console.log('toggle relay 1: ', toggle)
+      if (!toggle) {
+        toggle = 1;
+        dispatcher.rly82.turnRelayOn(1)
+      }
+      else {
+        toggle = 0;
+        dispatcher.rly82.turnRelayOff(1)
+      } 
+    })
 
   }
   catch(err) {

@@ -5,6 +5,17 @@
 Technical Documentation
 https://www.robot-electronics.co.uk/files/usb-rly82.pdf
 
+Mac Address: `b8:27:eb:45:3e:51`
+
+```bash
+# test connection (wifi or ethernet)
+$ ping raspberrypi.local
+
+# open ssh (password: root)
+$ ssh pi@raspberrypi.local
+Warning: Permanently added the ECDSA host key for IP address 'fe80::29b9:5a71:19d4:c8ca%en5' to the list of known hosts.
+pi@raspberrypi.local's password: *****  
+```
 
 ## Serial Port
 
@@ -29,3 +40,18 @@ $ dmesg | grep tty
 
 export PORT_NAME=/dev/ttyACM0
 ```
+
+## Edit source 
+
+```bash
+# goto app folder
+cd ~/git/portal
+
+# open editor (ctrl-w: save, ctrl-x: exit)
+nano ./src/index.js
+
+# start app
+node ./src/index.js
+```
+
+
