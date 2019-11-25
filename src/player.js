@@ -9,7 +9,7 @@ class SoundPlayer extends EventEmitter {
     this.stopped = false;
   }
 
-  async playOnce(file) {
+  async play(file) {
     await this._play(file);
   }
 
