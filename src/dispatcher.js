@@ -40,10 +40,10 @@ class Dispatcher extends EventEmitter {
     })
   }
 
-  async openDoor() {
+  async openDoor(time) {
     console.log('open door')
     this.rly82.turnRelayOn(1);
-    await this.wait(2000);
+    await this.wait(time);
     this.rly82.turnRelayOff(1);
   }
 

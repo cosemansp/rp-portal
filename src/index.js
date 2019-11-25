@@ -44,15 +44,11 @@ const player = new SoundPlayer();
       console.log('doorBell');   
       if (doorOpen) return;
       try {
-        await Promise.all([
-          dispatcher.player.playOnce('./sounds/creaky_door.mp3'),
-          dispatcher.openDoor()
-        ]); 
+        await dispatcher.openDoor(2000)
         doorOpen = true;
-        await dispatcher.player.playOnce('./sounds/welcome.mp3');
-        dispatcher.setTimer(3000, 'longOpen1');
-        dispatcher.setTimer(6000, 'longOpen2');
-        dispatcher.setTimer(10000, 'tooLongOpen');
+        await dispatcher.player.playOnce('./sounds/deur-hallo.mp3'),
+        dispatcher.setTimer(3000, 'longOpen');
+        dispatcher.setTimer(15000, 'tooLongOpen');
       }
       catch(err) {
         // aborted
@@ -67,7 +63,7 @@ const player = new SoundPlayer();
         dispatcher.stopAllTimers();
         doorOpen = false;
         await dispatcher.player.stop();
-        await dispatcher.player.playOnce('./sounds/thankyou.mp3')     
+        await dispatcher.player.playOnce('./sounds/deur-merci.mp3')     
       } 
       catch(err) {
         // aborted
@@ -77,11 +73,12 @@ const player = new SoundPlayer();
 
     dispatcher.on('timer', async (key) => {
       try {
-        if (key === 'longOpen1' || key === 'longOpen2') {
-          await dispatcher.player.playOnce('./sounds/cough.mp3')
+        if (key === 'longOpen') {
+          await dispatcher.player.playOnce('./sounds/deur-doorway-effect.mp3')
         }
         if (key === 'tooLongOpen') {
-          await dispatcher.player.playRepeat('./sounds/angry.mp3', 3)
+          await dispatcher.player.playOnce('./sounds/deur-wil-je-me-sluiten.mp3');
+          dispatcher.setTimer(5000, 'tooLongOpen');
         }
       }
       catch(err) {
