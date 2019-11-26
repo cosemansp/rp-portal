@@ -100,7 +100,7 @@ let sound = new Sound();
       
       if (!toggle) {
         toggle = 1;
-        sound.play('./sounds/deur-doorway-effect.mp3')
+        sound.play('./sounds/deur-doorway-effect.wav')
         // dispatcher.player.play('./sounds/deur-doorway-effect.mp3');
         // dispatcher.rly82.turnRelayOn(1)
       }
