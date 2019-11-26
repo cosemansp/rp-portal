@@ -1,3 +1,4 @@
+const Sound = require('aplay');
 const RLY82 = require('./rly82');
 const { wait, isInput } = require('./utils');
 const SoundPlayer = require('./player');
@@ -18,6 +19,7 @@ const player = new SoundPlayer();
     - audio ('merci')
     - re-enable doorbel
 */
+let sound = new Sound();
 
 (async function run() {
   //
@@ -94,15 +96,18 @@ const player = new SoundPlayer();
     });
 
     dispatcher.on('keypress', async (key) => {
-      console.log('toggle relay 1: ', toggle)
+      console.log('toggle relay 1: ', toggle);
+      
       if (!toggle) {
         toggle = 1;
-        dispatcher.player.play('./sounds/deur-doorway-effect.mp3');
+        sound.play('./sounds/deur-doorway-effect.mp3')
+        // dispatcher.player.play('./sounds/deur-doorway-effect.mp3');
         // dispatcher.rly82.turnRelayOn(1)
       }
       else {
         toggle = 0;
-        dispatcher.player.stop();
+        sound.pause();
+        // dispatcher.player.stop();
         // dispatcher.rly82.turnRelayOff(1)
       } 
     })
