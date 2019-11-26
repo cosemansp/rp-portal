@@ -29,15 +29,17 @@ class Dispatcher extends EventEmitter {
       }
     });
 
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.on('keypress', (str, key) => {
-      if (key.ctrl && key.name === 'c') {
-        this.emit('quit');
-        return;
-      }
-      this.emit('keypress', key);
-    })
+    if (process.stdin.setRawMode) {
+      readline.emitKeypressEvents(process.stdin);
+      process.stdin.setRawMode(true);
+      process.stdin.on('keypress', (str, key) => {
+        if (key.ctrl && key.name === 'c') {
+          this.emit('quit');
+          return;
+        }
+        this.emit('keypress', key);
+      })
+    }
   }
 
   async openDoor(time) {

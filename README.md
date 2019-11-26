@@ -1,5 +1,32 @@
 # Raspberry-Pi Portal
 
+## Setup Rasberian
+
+NOOBS
+
+* [Download NOOBS for Raspberry Pi](https://www.raspberrypi.org/downloads/noobs/)
+
+NodeJS
+* [Install Node.js and Npm on Raspberry Pi: 5 Steps](https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/)
+* [Raspberry Pi + NodeJS | We Work We Play](https://weworkweplay.com/play/raspberry-pi-nodejs/)
+
+Make it run on boot
+
+```bash
+# edit /etc/rc.local
+$ sudo nano /etc/rc.local
+
+# add the following script
+su pi -c 'node /home/pi/git/portal/src/index.js < /dev/null &'
+```
+
+Basic config
+
+```bash
+# open configiration
+$ sudo raspi-config
+```
+
 ## USB Module: USB-RLY82
 
 Technical Documentation
