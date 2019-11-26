@@ -79,6 +79,11 @@ ansi-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-3.0.0.tgz#ed0317c322064f79466c02966bddb605ab37d998"
   integrity sha1-7QMXwyIGT3lGbAKWa922Bas32Zg=
 
+aplay@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/aplay/-/aplay-1.2.0.tgz#43aaf91727e57a2ecbd961d08b0cad00ca7afde5"
+  integrity sha1-Q6r5Fyflei7L2WHQiwytAMp6/eU=
+
 aproba@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
@@ -276,6 +281,11 @@ node-abi@^2.7.0:
   integrity sha512-VhPBXCIcvmo/5K8HPmnWJyyhvgKxnHTUMXR/XwGHV68+wrgkzST4UmQrY/XszSWA5dtnXpNp528zkcyJ/pzVcw==
   dependencies:
     semver "^5.4.1"
+
+node-aplay@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/node-aplay/-/node-aplay-1.0.3.tgz#6aa7a47f9f9ef848c34de07a5a2b507192df978e"
+  integrity sha1-aqekf5+e+EjDTeB6WitQcZLfl44=
 
 noop-logger@^0.1.1:
   version "0.1.1"
