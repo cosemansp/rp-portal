@@ -31,7 +31,7 @@ class SoundPlayer extends EventEmitter {
       this.stopped = true;
       
       // stop playback
-      this.audio.kill();
+      this.audio.kill('SIGINT');
       this.audio = null;
 
       // wait until  playback is finished
