@@ -2,30 +2,43 @@
 
 ## Setup Rasberian
 
-NOOBS
+### NOOBS (to install Raspbian OS)
 
 * [Download NOOBS for Raspberry Pi](https://www.raspberrypi.org/downloads/noobs/)
 
-NodeJS
+### Install NodeJS
 * [Install Node.js and Npm on Raspberry Pi: 5 Steps](https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/)
 * [Raspberry Pi + NodeJS | We Work We Play](https://weworkweplay.com/play/raspberry-pi-nodejs/)
 
-Make it run on boot
+### Make it run on boot
 
 ```bash
-# edit /etc/rc.local
-$ sudo nano /etc/rc.local
+# install pm2
+$ sudo npm install -g pm2
 
-# add the following script
-su pi -c 'node /home/pi/git/portal/src/index.js < /dev/null &'
+# start the app
+$ cd ./git/portal
+$ pm2 start ./src/index.js
+
+# Generate startup script
+$ pm2 startup systemd
+
+# Copy the generated command and run it
+$ sudo env PATH=$PATH:/usr/bin /usr/l....
+
+# Create dump file
+$ pm2 save
 ```
 
-Basic config
+### Basic config
 
 ```bash
 # open configiration
 $ sudo raspi-config
 ```
+
+Extra information
+* https://dev.to/bogdaaamn/run-your-nodejs-application-on-a-headless-raspberry-pi-4jnn
 
 ## USB Module: USB-RLY82
 
@@ -68,7 +81,7 @@ $ dmesg | grep tty
 export PORT_NAME=/dev/ttyACM0
 ```
 
-## Aplay
+## Aplay (audio player)
 
 ```bash
 # list all audio devices
@@ -88,6 +101,19 @@ cd ~/git/portal
 nano ./src/index.js
 
 # start app
+node ./src/index.js
+```
+
+## Get new version from github 
+
+```bash
+# goto app folder
+cd ~/git/portal
+
+# get latest version (passphrase: silverado)
+git pull
+
+# you can now restart the app
 node ./src/index.js
 ```
 
