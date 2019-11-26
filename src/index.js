@@ -97,11 +97,13 @@ const player = new SoundPlayer();
       console.log('toggle relay 1: ', toggle)
       if (!toggle) {
         toggle = 1;
-        dispatcher.rly82.turnRelayOn(1)
+        dispatcher.player.play('./sounds/deur-doorway-effect.mp3');
+        // dispatcher.rly82.turnRelayOn(1)
       }
       else {
         toggle = 0;
-        dispatcher.rly82.turnRelayOff(1)
+        dispatcher.player.stop();
+        // dispatcher.rly82.turnRelayOff(1)
       } 
     })
 
