@@ -41,6 +41,16 @@ $ dmesg | grep tty
 export PORT_NAME=/dev/ttyACM0
 ```
 
+## Aplay
+
+```bash
+# list all audio devices
+$ aplay -l
+
+# volume control
+$ alsamixer
+```
+
 ## Edit source 
 
 ```bash

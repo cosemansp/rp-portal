@@ -48,9 +48,9 @@ let sound = new Sound();
       try {
         await dispatcher.openDoor(2000)
         doorOpen = true;
-        await dispatcher.player.play('./sounds/deur-hallo.mp3'),
-        dispatcher.setTimer(3000, 'longOpen');
-        dispatcher.setTimer(15000, 'tooLongOpen');
+        dispatcher.player.play('./sounds/deur-hallo.wav'),
+        dispatcher.setTimer(7000, 'longOpen');
+        dispatcher.setTimer(20000, 'tooLongOpen');
       }
       catch(err) {
         // aborted
@@ -64,8 +64,8 @@ let sound = new Sound();
       try {
         dispatcher.stopAllTimers();
         doorOpen = false;
-        await dispatcher.player.stop();
-        await dispatcher.player.play('./sounds/deur-merci.mp3')     
+        // dispatcher.player.stop();
+        dispatcher.player.play('./sounds/deur-merci.wav')     
       } 
       catch(err) {
         // aborted
@@ -76,11 +76,11 @@ let sound = new Sound();
     dispatcher.on('timer', async (key) => {
       try {
         if (key === 'longOpen') {
-          await dispatcher.player.play('./sounds/deur-doorway-effect.mp3')
+          dispatcher.player.play('./sounds/deur-doorway-effect.wav')
         }
         if (key === 'tooLongOpen') {
-          await dispatcher.player.play('./sounds/deur-wil-je-me-sluiten.mp3');
-          dispatcher.setTimer(5000, 'tooLongOpen');
+          dispatcher.player.play('./sounds/deur-wil-je-me-sluiten.wav');
+          dispatcher.setTimer(7500, 'tooLongOpen');
         }
       }
       catch(err) {
@@ -100,15 +100,11 @@ let sound = new Sound();
       
       if (!toggle) {
         toggle = 1;
-        sound.play('./sounds/deur-doorway-effect.wav')
-        // dispatcher.player.play('./sounds/deur-doorway-effect.mp3');
-        // dispatcher.rly82.turnRelayOn(1)
+        dispatcher.rly82.turnRelayOn(1)
       }
       else {
         toggle = 0;
-        sound.pause();
-        // dispatcher.player.stop();
-        // dispatcher.rly82.turnRelayOff(1)
+        dispatcher.rly82.turnRelayOff(1)
       } 
     })
 
